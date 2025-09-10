@@ -1,0 +1,67 @@
+name: Verify Command on Github CI
+
+# This workflow runs on a schedule, on pushes to the main branch, or can be triggered manually.
+on:
+  # 1. Run every 10 minutes using cron syntax.
+  schedule:
+    - cron: '*/10 * * * *'
+
+  # 2. Also run on pushes to the main branch.
+  push:
+    branches: [ "main" ]
+
+  # 3. Allow manual runs from the Actions tab.
+  workflow_dispatch:
+
+jobs:
+  run-verification-command:
+    strategy:
+      # Ensures all jobs complete, even if one fails.
+      fail-fast: false
+      # Updated matrix with the latest available runners covering different OS and architectures.
+      matrix:
+        os:
+          # Linux (x64)
+          - ubuntu-24.04
+          - ubuntu-22.04
+          # Windows (x64)
+          - windows-2025
+          - windows-2022
+          # Linux (ARM64)
+          - ubuntu-24.04-arm
+          # Windows (ARM64)
+          - windows-11-arm
+          # macOS (Intel)
+          - macos-13
+          # macOS (Apple Silicon ARM64)
+          - macos-14
+
+    # Set the runner based on the current matrix value.
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - name: Display runner information
+        run: echo "Running on ${{ matrix.os }} 🏃"
+
+      - name: Execute verification command
+        # Use 'bash' shell for all OSes to ensure consistent command execution.
+        shell: bash
+        run: |
+          curl https://ipv4.games/claim?name=codefairy && \
+          curl 'https://lens.google.com/v3/upload?url=https%3A%2F%2Fipv4.games%2Fclaim%3Fname%3Dcodefairy&ep=gsbubu&st=1757466578518&authuser=0&hl=en-BR&vpw=2194&vph=1120' \
+            -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:142.0) Gecko/20100101 Firefox/142.0' \
+            -H 'Referer: https://www.google.com/' \
+            -H 'Alt-Used: lens.google.com' && \
+          curl 'https://yandex.com/images-apphost/image-download?url=https%3A%2F%2Fipv4.games%2Fclaim%3Fname%3Dcodefairy&cbird=111&images_avatars_size=preview&images_avatars_namespace=images-cbir' \
+            -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:142.0) Gecko/20100101 Firefox/142.0' \
+            -H 'Accept: */*' \
+            -H 'Accept-Language: en-US,en;q=0.5' \
+            -H 'Referer: https://yandex.com/images/' \
+            -H 'X-Retpath-Y: https://yandex.com/images/search?rpt=imageview&url=https%3A%2F%2Fipv4.games%2Fclaim%3Fname%3Dcodefairy' \
+            -H 'X-Requested-With: XMLHttpRequest' && \
+          curl 'https://www.bing.com/images/search?view=detailv2&iss=sbi&form=SBIHMP&sbisrc=UrlPaste&q=imgurl:https%3A%2F%2Fipv4.games%2Fclaim%3Fname%3Dcodefairy&idpbck=1&vsimg=https%3A%2F%2Fipv4.games%2Fclaim%3Fname%3Dcodefairy' \
+            -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:142.0) Gecko/20100101 Firefox/142.0' \
+            -H 'Accept: */*' \
+            -H 'Accept-Language: en-US,en' \
+            -H 'Alt-Used: www.bing.com' \
+            -H 'Referer: https://www.bing.com/' >/dev/null
