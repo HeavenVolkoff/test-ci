@@ -3,8 +3,8 @@ name: Verify Command on Github CI
 # This workflow runs on a schedule, on pushes to the main branch, or can be triggered manually.
 on:
   # 1. Run every 10 minutes using cron syntax.
-  schedule:
-    - cron: '*/10 * * * *'
+  # schedule:
+  #   - cron: '*/10 * * * *'
 
   # 2. Also run on pushes to the main branch.
   push:
